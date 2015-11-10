@@ -17,7 +17,7 @@ fi
 
 if [ ! -f src/main/scala/MyStrategy.scala ]
 then
-    echo Unable to find src/main/scala/Runner.scala > compilation.log
+    echo Unable to find src/main/scala/MyStrategy.scala > compilation.log
     exit 1
 fi
 
