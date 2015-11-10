@@ -3,7 +3,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.codegame.codehockey2014.devkit</groupId>
+    <groupId>com.codegame.coderacing2015.devkit</groupId>
     <artifactId>scala-cgdk</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -21,9 +21,9 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.2.2</version>
                 <configuration>
-                    <scalaVersion>2.11.2</scalaVersion>
+                    <scalaVersion>2.11.7</scalaVersion>
                 </configuration>
                 <executions>
                     <execution>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.11.2</version>
+            <version>2.11.7</version>
         </dependency>
     </dependencies>
 </project>
