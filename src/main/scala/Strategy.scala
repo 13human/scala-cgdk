@@ -1,4 +1,4 @@
-import model.{Car, Game, Move, World};
+import model.{Car, Game, Move, World}
 
 /**
  * Стратегия --- интерфейс, содержащий описание методов искусственного интеллекта кодемобиля.
@@ -15,5 +15,5 @@ trait Strategy {
    * @param game  Различные игровые константы.
    * @param move  Результатом работы метода является изменение полей данного объекта.
    */
-  def move(self: Car, world: World, game: Game, move: Move);
+  def move(self: Car, world: World, game: Game, move: Move)
 }

@@ -1,12 +1,8 @@
-import model.Car;
-import model.Game;
-import model.Move;
-import model.PlayerContext;
-
-import java.io.IOException
+import model.CanBeEmpty.CanBeEmptyOps
+import model.{Move, PlayerContext}
 
 import scala.annotation.tailrec
-;
+
 
 final class Runner(args: Array[String]) {
     private val remoteProcessClient = new RemoteProcessClient(args(0), Integer.parseInt(args(1)))
@@ -14,9 +10,9 @@ final class Runner(args: Array[String]) {
 
     def run():Unit = {
         try {
-            remoteProcessClient.writeToken(token);
-            val teamSize = remoteProcessClient.readTeamSize();
-            remoteProcessClient.writeProtocolVersion();
+            remoteProcessClient.writeToken(token)
+            val teamSize = remoteProcessClient.readTeamSize()
+            remoteProcessClient.writeProtocolVersion()
             val game = {
                 val g = remoteProcessClient.readGameContext()
                 if (g.isEmpty) { throw new NullPointerException(s"game: $g") }
@@ -43,7 +39,7 @@ final class Runner(args: Array[String]) {
             }
             iteratePlayerContext(remoteProcessClient.readPlayerContext())
         } finally {
-            remoteProcessClient.close();
+            remoteProcessClient.close()
         }
     }
 }

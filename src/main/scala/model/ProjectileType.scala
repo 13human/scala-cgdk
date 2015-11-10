@@ -1,19 +1,23 @@
-package model;
+package model
 
 /**
  * Тип метательного снаряда.
  */
-public enum ProjectileType {
+sealed trait ProjectileType
+
+
+object ProjectileType {
+
     /**
      * Небольшой и лёгкий метательный снаряд для кодемобилей типа багги. Свободно пролетает сквозь ограждение трассы.
      * Наносит относительно небольшой урон при попадании в кодемобиль и сразу после этого исчезает.
      */
-    WASHER,
+    case object WASHER extends ProjectileType
 
     /**
      * Метательный снаряд, сопоставимый по размеру и массе с кодемобилем. Используется кодемобилями типа джип.
      * Отражается как от кодемобилей, так и от границ трассы. Если скорость снаряда при столкновении меньше значения
      * {@code game.tireDisappearSpeedFactor * game.tireInitialSpeed}, то сразу после столкновения он исчезает.
      */
-    TIRE
+    case object TIRE extends ProjectileType
 }

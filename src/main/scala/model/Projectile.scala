@@ -1,7 +1,7 @@
 package model
 
 /**
-  * Класс, определяющий лужу мазута. Содержит также все свойства круглого юнита.
+  * Класс, определяющий метательный снаряд. Содержит также все свойства круглого юнита.
   * @param id Возвращает уникальный идентификатор объекта.
   * @param mass Возвращает массу объекта в единицах массы.
   * @param x Возвращает X-координату центра объекта. Ось абсцисс направлена слева направо.
@@ -13,17 +13,21 @@ package model
   * @param angularSpeed Возвращает скорость вращения объекта.
   *                     Положительные значения соответствуют вращению по часовой стрелке.
   * @param radius Возвращает радиус объекта.
-  * @param remainingLifetime Возвращает количество тиков, по прошествии которого лужа мазута полностью высохнет.
+  * @param carId Возвращает идентификатор кодемобиля, выпустившего данный снаряд.
+  * @param playerId Возвращает идентификатор игрока, кодемобиль которого выпустил данный снаряд.
+  * @param  `type` Возвращает тип метательного снаряда.
   */
-class OilSlick(id: Long,
-               mass: Double,
-               x: Double,
-               y: Double,
-               speedX: Double,
-               speedY: Double,
-               angle: Double,
-               angularSpeed: Double,
-               radius: Double,
-               val remainingLifetime: Int) extends CircularUnit(id, mass, x, y, speedX, speedY, angle, angularSpeed, radius)
+class Projectile(id: Long,
+                 mass: Double,
+                 x: Double,
+                 y: Double,
+                 speedX: Double,
+                 speedY: Double,
+                 angle: Double,
+                 angularSpeed: Double,
+                 radius: Double,
+                 val carId: Long,
+                 val playerId: Long,
+                 val `type`: ProjectileType) extends CircularUnit(id, mass, x, y, speedX, speedY, angle, angularSpeed, radius)
 
-object OilSlick extends CanBeEmpty[OilSlick]
+object Projectile extends CanBeEmpty[Projectile]
