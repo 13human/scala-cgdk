@@ -21,76 +21,37 @@ sbt eclipse
 -----------------------------------------------------------------------------
 
 ```scala
-import model.{Hockeyist, World, Game, Move, ActionType, HockeyistType, HockeyistState, Puck}
-import MyStrategy.{StrikeAngle, getNearestOpponent}
+import model.{Car, Game, Move, World}
+import model.TileType.{RIGHT_BOTTOM_CORNER, LEFT_BOTTOM_CORNER, RIGHT_TOP_CORNER, LEFT_TOP_CORNER}
+import scala.math.{hypot, Pi, abs}
 
-object MyStrategy {
-  private def getNearestOpponent(x: Double, y: Double, world: World): Option[Hockeyist] = {
-    val hockeyists = world.hockeyists.collect({
-      case hockeyist if !hockeyist.teammate && hockeyist.hokeyistType != HockeyistType.Goalie
-        && hockeyist.state != HockeyistState.KnockedDown && hockeyist.state != HockeyistState.Resting
-      => hockeyist
-    })
-
-    if (hockeyists.isEmpty) {
-      None
-    } else {
-      Some(hockeyists.minBy { hockeyist => math.hypot(x - hockeyist.x, y - hockeyist.y)})
-    }
-  }
-
-  private[MyStrategy] final val StrikeAngle = 1.0D * math.Pi / 180.0D
-}
 
 class MyStrategy extends Strategy {
-  def move(self: Hockeyist, world: World, game: Game, move: Move): Unit = {
-    self.state match {
-      case HockeyistState.Swinging => move.action = ActionType.Strike
+  def move(self: Car, world: World, game: Game, move: Move) {
+    var nextWaypointX: Double = (self.nextWaypointX + 0.5D) * game.trackTileSize
+    var nextWaypointY: Double = (self.nextWaypointY + 0.5D) * game.trackTileSize
+    val cornerTileOffset: Double = 0.25D * game.trackTileSize
+    world.tilesXY(self.nextWaypointX)(self.nextWaypointY) match {
+      case LEFT_TOP_CORNER =>
+        nextWaypointX += cornerTileOffset
+        nextWaypointY += cornerTileOffset
+      case RIGHT_TOP_CORNER =>
+        nextWaypointX -= cornerTileOffset
+        nextWaypointY += cornerTileOffset
+      case LEFT_BOTTOM_CORNER =>
+        nextWaypointX += cornerTileOffset
+        nextWaypointY -= cornerTileOffset
+      case RIGHT_BOTTOM_CORNER =>
+        nextWaypointX -= cornerTileOffset
+        nextWaypointY -= cornerTileOffset
       case _ =>
-        if (world.puck.ownerPlayerId.contains(self.playerId)) {
-          if (world.puck.ownerHockeyistId.contains(self.id)) {
-            drivePuck(self, world, game, move)
-          } else {
-            strikeNearestOpponent(self, world, game, move)
-          }
-        } else {
-          moveToPuck(self, world.puck, move)
-        }
     }
-  }
-
-  private def strikeNearestOpponent(self: Hockeyist, world: World, game: Game, move: Move) {
-    for (nearestOpponent <- getNearestOpponent(self.x, self.y, world)) {
-      if (self.distanceTo(nearestOpponent) > game.stickLength) {
-        move.speedUp = 1.0D
-        move.turn = self.angleTo(nearestOpponent)
-      }
-      if (math.abs(self.angleTo(nearestOpponent)) < 0.5D * game.stickSector) {
-        move.action = ActionType.Strike
-      }
-    }
-  }
-
-  private def moveToPuck(self: Hockeyist, puck: Puck, move: Move) {
-    move.speedUp = 1.0D
-    move.turn = self.angleTo(puck)
-    move.action = ActionType.TakePuck
-  }
-
-  private def drivePuck(self: Hockeyist, world: World, game: Game, move: Move) {
-    val Some((netX, netY)) = for {
-      opponentPlayer <- world.opponentPlayer
-      netX = 0.5D * (opponentPlayer.netBack + opponentPlayer.netFront)
-      netY = {
-        val ny = 0.5D * (opponentPlayer.netBottom + opponentPlayer.netTop)
-        ny + ((if (self.y < ny) 0.5D else -0.5D) * game.goalNetHeight)
-      }
-    } yield (netX, netY)
-
-    val angleToNet = self.angleTo(netX, netY)
-    move.turn = angleToNet
-    if (math.abs(angleToNet) < StrikeAngle) {
-      move.action = ActionType.Swing
+    val angleToWaypoint: Double = self.angleTo(nextWaypointX, nextWaypointY)
+    val speedModule: Double = hypot(self.speedX, self.speedY)
+    move.wheelTurn = angleToWaypoint * 32.0D / Pi
+    move.enginePower = 0.75D
+    if (speedModule * speedModule * abs(angleToWaypoint) > 2.5D * 2.5D * Pi) {
+      move.brake = true
     }
   }
 }
@@ -98,6 +59,9 @@ class MyStrategy extends Strategy {
 
 Contributors
 ------------
-
+2015:
+* Marat Yakupov -- https://github.com/13human/
+* Alexander Grishin -- https://github.com/AlexGri/
+2014:
 * Serge Ivanov -- https://github.com/iSerge/
 * Alexander Myltsev -- https://github.com/alexander-myltsev
