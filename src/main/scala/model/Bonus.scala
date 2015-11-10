@@ -27,3 +27,5 @@ class Bonus(id: Long,
             width: Double,
             height: Double,
             val `type`: BonusType)  extends RectangularUnit(id, mass, x, y, speedX, speedY, angle, angularSpeed, width, height)
+
+object Bonus extends CanBeEmpty[Bonus]
