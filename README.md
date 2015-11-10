@@ -62,6 +62,7 @@ Contributors
 2015:
 * Marat Yakupov -- https://github.com/13human/
 * Alexander Grishin -- https://github.com/AlexGri/
+
 2014:
 * Serge Ivanov -- https://github.com/iSerge/
 * Alexander Myltsev -- https://github.com/alexander-myltsev
