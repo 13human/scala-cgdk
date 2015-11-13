@@ -67,4 +67,8 @@ object TileType {
     */
   case object CROSSROADS extends TileType
 
+  /**
+    * Тип тайла пока не известен.
+    */
+  case object UNKNOWN extends TileType
 }

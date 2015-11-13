@@ -22,7 +22,14 @@ final class RemoteProcessClient(host: String, port: Int) extends Closeable {
     private val outputStreamBuffer = new ByteArrayOutputStream(BufferSizeBytes)
 
     lazy val mapName:String = readString()
-    lazy val tilesXY:Vector[Vector[TileType]] = readEnumArray2D(tileTypeFromByte _)
+    var tilesXY:Vector[Vector[TileType]] = Vector()
+    def readTilesXY = {
+      val newTilesXY = readEnumArray2D(tileTypeFromByte _)
+      if (newTilesXY != null && newTilesXY.nonEmpty) {
+        tilesXY = newTilesXY
+      }
+      tilesXY
+    }
     lazy val waypoints:Vector[Vector[Int]] = readIntArray2D();
     lazy val startingDirection:Direction = directionFromByte(readByte())
 
@@ -41,7 +48,7 @@ final class RemoteProcessClient(host: String, port: Int) extends Closeable {
 
     def writeProtocolVersion(): Unit = {
         writeByte(messageTypeToInt(MessageType.ProtocolVersion))
-        writeInt(1)
+        writeInt(2)
         flush()
     }
 
@@ -98,7 +105,7 @@ final class RemoteProcessClient(host: String, port: Int) extends Closeable {
         if (readBoolean()) {
             new  World(
                 readInt(), readInt(), readInt(), readInt(), readInt(), readPlayers(), readCars(), readProjectiles(),
-                readBonuses(), readOilSlicks(), mapName, tilesXY, waypoints, startingDirection
+                readBonuses(), readOilSlicks(), mapName, readTilesXY, waypoints, startingDirection
             )
         } else { World.empty }
     }
@@ -124,7 +131,7 @@ final class RemoteProcessClient(host: String, port: Int) extends Closeable {
                 readLong(), readDouble(), readDouble(), readDouble(), readDouble(), readDouble(), readDouble(),
                 readDouble(), readDouble(), readDouble(), readLong(), readInt(), readBoolean(), carTypeFromByte(readByte()),
             readInt(), readInt(), readInt(), readInt(), readInt(), readInt(), readInt(), readInt(), readDouble(),
-            readDouble(), readDouble(), readInt(), readInt(), readBoolean()
+            readDouble(), readDouble(), readInt(), readInt(), readInt(), readBoolean()
             )
         } else { Car.empty }
     }
@@ -416,6 +423,7 @@ object RemoteProcessClient {
       case 9 => TileType.TOP_HEADED_T
       case 10 => TileType.BOTTOM_HEADED_T
       case 11 => TileType.CROSSROADS
+      case 12 => TileType.UNKNOWN
       case _ => throw new IllegalArgumentException("tileTypeFromByte: " + value)
     }
     // scalastyle:on magic.number

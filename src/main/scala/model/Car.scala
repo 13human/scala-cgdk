@@ -33,6 +33,7 @@ package model
   * @param enginePower Возвращает относительную мощность двигателя кодемобиля. Значение находится в интервале
   *                    [{ @code -1.0}, { @code 1.0}] кроме случаев, когда кодемобиль использует ускорение <<нитро>>.
   * @param wheelTurn Возвращает относительный угол поворота колёс (или руля, что эквивалентно) кодемобиля в интервале  [{ @code -1.0}, { @code 1.0}].
+  * @param nextWaypointIndex Возвращает индекс следующего ключевого тайла в массиве { @code world.waypoints}.
   * @param nextWaypointX Возвращает компоненту X позиции следующего ключевого тайла.
   *                      Конвертировать позицию в точные координаты можно, используя значение { @code game.trackTileSize}.
   * @param nextWaypointY Возвращает компоненту Y позиции следующего ключевого тайла.
@@ -65,6 +66,7 @@ class Car(id: Long,
           val durability: Double,
           val enginePower: Double,
           val wheelTurn: Double,
+          val nextWaypointIndex: Int,
           val nextWaypointX: Int,
           val nextWaypointY: Int,
           val finishedTrack: Boolean) extends RectangularUnit(id, mass, x, y, speedX, speedY, angle, angularSpeed, width, height)
