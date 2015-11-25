@@ -19,7 +19,8 @@ if not exist src\main\scala\MyStrategy.scala (
 rd /Q /S classes
 md classes
 
-call "%SCALA_HOME%\bin\scalac" -encoding UTF-8 -sourcepath "src/main/scala" -d classes "src/main/scala/Runner.scala" >compilation.log 2>&1
+call "%SCALA_HOME%\bin\scalac" -encoding UTF-8 -sourcepath "src/main/scala" -d classes src/main/scala/*.scala >compilation.log 2>&1
+call "%JAVA_HOME%\bin\javac" -encoding UTF-8 -sourcepath "src/main/scala" -cp "./classes" -d classes src/main/scala/*.java >>compilation.log 2>&1
 
 if not exist classes\Runner.class (
     echo Unable to find classes\Runner.class >> compilation.log

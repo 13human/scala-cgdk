@@ -3,6 +3,10 @@ type scalac >/dev/null 2>&1 || {
     echo "Cannot find 'scalac'. Make sure it is in PATH" > compilation.log
     exit 1
 }
+type javac >/dev/null 2>&1 || {
+    echo "Cannot find 'javac'. Make sure it is in PATH" > compilation.log
+    exit 1
+}
 if [ ! -f $SCALA_HOME/lib/scala-library.jar ]
 then
     echo Unable to find scala-library.jar in SCALA_HOME [$SCALA_HOME] > compilation.log
@@ -24,7 +28,8 @@ fi
 rm -rf classes
 mkdir classes
 
-scalac -sourcepath "src/main/scala" -d classes "src/main/scala/Runner.scala" >compilation.log 2>&1
+scalac -sourcepath "src/main/scala" -d classes src/main/scala/*.scala >compilation.log 2>&1
+javac -sourcepath "src/main/scala" -cp "classes" -d classes src/main/scala/*.java >>compilation.log 2>&1
 
 if [ ! -f classes/MyStrategy.class ]
 then
